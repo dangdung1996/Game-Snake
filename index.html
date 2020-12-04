@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<h1>...Snake Classic...</h1>
+
+<body>
+<canvas id="game" width="400" height="400"></canvas>
+
+<script>
+
+    width = 20; unit = 20;
+    snake = [];
+    head_x = 10; head_y = 10;
+    snake_length = 1;
+    denta_x = 0; denta_y = 0;
+    food_x = 15; food_y = 15;
+    window.onload = function () {
+        canv = document.getElementById("game");
+        ctx = canv.getContext("2d");
+        document.addEventListener("keydown", button_handle);
+        set = setInterval(game, 100);
+
+    }
+
+    function button_handle(key) {
+        //bắt sự kiện bàn phím ấn xuống
+        // lọc sự kiện keydown để rắn không di ngược lại
+        if (key.keyCode === 37 && denta_x === 0) {
+            denta_x = -1;
+            denta_y = 0;
+        } else if (key.keyCode === 38 && denta_y === 0) {
+            denta_y = -1;
+            denta_x = 0;
+        } else if (key.keyCode === 39 && denta_x === 0) {
+            denta_x = 1;
+            denta_y = 0;
+        } else if (key.keyCode === 40 && denta_y === 0) {
+            denta_y = 1;
+            denta_x = 0;
+        }
+    }
+
+    function game() {
+        head_x = head_x + denta_x;
+        head_y = head_y + denta_y;
+        if (head_x < 0) head_x = width - 1;
+        if (head_y < 0) head_y = width - 1;
+        if (head_x > width - 1) head_x = 0;
+        if (head_y > width - 1) head_y = 0;
+
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canv.width, canv.height);
+
+        for (let i = 0; i < snake.length; i++) {
+
+            ctx.fillStyle = "yellow"
+            ctx.fillRect(snake[i].x * unit, snake[i].y * unit, unit - 2, unit - 2);
+            if (snake[i].x === head_x && snake[i].y === head_y && snake.length >= 2) {
+                clearInterval(set);
+                alert("Game over!");
+                document.write('    - Top 1: '+ prompt('Nhập tên của bạn') +
+                              "<br> - Top 2: YOUR NAME " +
+                              "<br> - Top 3: YOUR NAME ")
+
+
+            }
+        }
+        snake.push({x: head_x, y: head_y});
+        while (snake.length > snake_length) {
+            snake.shift();
+
+        }
+        if (food_x === head_x && food_y === head_y) {
+            snake_length++;
+            food_x = Math.floor(Math.random() * width);
+            food_y = Math.floor(Math.random() * width)
+        }
+        ctx.fillStyle = 'red';
+        ctx.fillRect(food_x * unit, food_y * unit, unit - 2, unit - 2);
+
+
+    }
+
+
+</script>
+</body>
+</html>
